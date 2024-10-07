@@ -129,14 +129,14 @@ static VALUE rxml_dtd_type(VALUE self)
  *    XML::Dtd.new(external_id, system_id, name, document, internal) -> dtd
  *
  * Create a new Dtd from the specified public and system identifiers:
- *   
+ *
  *   * The first usage creates a DTD from a string and requires 1 parameter.
  *   * The second usage loads and parses an external DTD and requires 2 parameters.
  *   * The third usage creates a new internal or external DTD and requires 2 parameters and 3 optional parameters.
  *     The DTD is then attached to the specified document if it is not nil.
- * 
+ *
  * Parameters:
- * 
+ *
  *   dtd_string - A string that contains a complete DTD
  *   external_id - A string that specifies the DTD's external name. For example, "-//W3C//DTD XHTML 1.0 Transitional//EN"
  *   system_id - A string that specififies the DTD's system name. For example, "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
@@ -162,11 +162,17 @@ static VALUE rxml_dtd_initialize(int argc, VALUE *argv, VALUE self)
           VALUE name, doc, internal;
           rb_scan_args(argc, argv, "23", &external, &system, &name, &doc, &internal);
 
-          Check_Type(external, T_STRING);
-          xpublic = (const xmlChar*) StringValuePtr(external);
+          if (external != Qnil)
+          {
+            Check_Type(external, T_STRING);
+            xpublic = (const xmlChar*) StringValuePtr(external);
+          }
 
-          Check_Type(system, T_STRING);
-          xsystem = (const xmlChar*) StringValuePtr(system);
+          if (system != Qnil)
+          {
+            Check_Type(system, T_STRING);
+            xsystem = (const xmlChar*) StringValuePtr(system);
+          }
 
           if (name != Qnil)
           {
